@@ -65,6 +65,25 @@ export interface LeadSummary {
   generated_at: string;
 }
 
+export interface MergeRequest {
+  id: string;
+  source_contact: { id: string; name: string; email: string; company?: string };
+  target_contact: { id: string; name: string; email: string; company?: string };
+  confidence: number;
+  reason: string;
+  status: "pending" | "approved" | "rejected";
+  created_at: string;
+}
+
+export interface Integration {
+  id: string;
+  name: string;
+  type: Channel;
+  status: "connected" | "disconnected" | "error";
+  last_sync?: string;
+  account?: string;
+}
+
 const now = new Date();
 
 export const mockContacts: Contact[] = [
