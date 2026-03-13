@@ -28,7 +28,7 @@ export default function AiScanning() {
           if (res.status === "complete") {
             setStatus("complete");
             clearInterval(pollRef.current!);
-          } else if (res.status === "error") {
+          } else if ((res.status as string) === "error") {
             setStatus("error");
             clearInterval(pollRef.current!);
           }
