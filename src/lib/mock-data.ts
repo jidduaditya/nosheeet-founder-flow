@@ -140,8 +140,11 @@ export const mockReminders: Reminder[] = [
 ];
 
 export const mockLeadSummaries: LeadSummary[] = [
-  { id: "ls1", contact_id: "1", contact_name: "Priya Sharma", summary: "Hot lead. Actively negotiating annual license. Interested in premium support. Decision expected this week.", generated_at: subHours(now, 1).toISOString() },
-  { id: "ls2", contact_id: "3", contact_name: "Sarah Miller", summary: "Enterprise deal with high ACV. Proposal sent, awaiting review. Champion identified internally.", generated_at: subDays(now, 1).toISOString() },
+  { id: "ls1", contact_id: "1", contact_name: "Priya Sharma", summary: "Hot lead. Actively negotiating annual license. Interested in premium support. Decision expected this week.", pain_points: ["Needs 24/7 support SLA guarantee", "Concerned about onboarding timeline", "Comparing with competitor pricing"], recommended_action: "Send revised SLA document before tomorrow's call. Emphasize first-year premium support inclusion.", generated_at: subHours(now, 1).toISOString() },
+  { id: "ls2", contact_id: "3", contact_name: "Sarah Miller", summary: "Enterprise deal with high ACV. Proposal sent, awaiting review. Champion identified internally.", pain_points: ["Complex procurement process", "Needs SOC 2 compliance documentation", "Multiple stakeholders involved in decision"], recommended_action: "Follow up with Sarah's internal champion. Prepare compliance documentation package.", generated_at: subDays(now, 1).toISOString() },
+  { id: "ls3", contact_id: "2", contact_name: "James Chen", summary: "Small pilot deal. Team is enthusiastic after demo. Quick close potential if agreement sent promptly.", pain_points: ["Limited budget for Q1", "Needs fast integration with existing tools"], recommended_action: "Send pilot agreement today. Offer 30-day trial with dedicated onboarding support.", generated_at: subHours(now, 4).toISOString() },
+  { id: "ls4", contact_id: "4", contact_name: "Raj Patel", summary: "Technical buyer exploring integration options. Needs hands-on demo of API capabilities.", pain_points: ["Requires REST API documentation", "Concerned about data migration effort"], recommended_action: "Schedule technical deep-dive. Share API documentation and migration guide.", generated_at: subDays(now, 1).toISOString() },
+  { id: "ls5", contact_id: "7", contact_name: "Anika Gupta", summary: "Deal going cold. Last engagement 12 days ago. Mentioned revisiting next quarter.", pain_points: ["Budget freeze until Q2", "Internal reorganization affecting priorities"], recommended_action: "Send a brief check-in email. Offer a no-commitment Q2 planning call.", generated_at: subDays(now, 5).toISOString() },
 ];
 
 export const mockMergeRequests: MergeRequest[] = [
