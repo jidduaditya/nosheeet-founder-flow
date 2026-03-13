@@ -9,7 +9,11 @@ import Dashboard from "@/pages/Dashboard";
 import Contacts from "@/pages/Contacts";
 import ContactDetail from "@/pages/ContactDetail";
 import Deals from "@/pages/Deals";
+import DealDetail from "@/pages/DealDetail";
 import Reminders from "@/pages/Reminders";
+import MergeRequests from "@/pages/MergeRequests";
+import Integrations from "@/pages/Integrations";
+import SettingsPage from "@/pages/SettingsPage";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,7 +32,11 @@ const App = () => {
               <Route path="/contacts" element={<Contacts />} />
               <Route path="/contacts/:id" element={<ContactDetail />} />
               <Route path="/deals" element={<Deals />} />
+              <Route path="/deals/:id" element={<DealDetail />} />
               <Route path="/reminders" element={<Reminders />} />
+              <Route path="/merge-requests" element={<MergeRequests />} />
+              <Route path="/integrations" element={<Integrations />} />
+              <Route path="/settings" element={<SettingsPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AppLayout>
