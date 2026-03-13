@@ -64,6 +64,8 @@ export interface LeadSummary {
   contact_id: string;
   contact_name: string;
   summary: string;
+  pain_points: string[];
+  recommended_action: string;
   generated_at: string;
 }
 
