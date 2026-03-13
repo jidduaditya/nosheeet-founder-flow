@@ -16,6 +16,9 @@ export default function DealDetail() {
   const meetings = mockMeetings.filter(m => m.contact_id === deal.contact_id);
   const stageLabel = DEAL_STAGES.find(s => s.key === deal.stage)?.label ?? deal.stage;
   const stageIndex = DEAL_STAGES.findIndex(s => s.key === deal.stage);
+  // Active pipeline stages for progress bar (exclude lost/cold)
+  const progressStages = DEAL_STAGES.filter(s => !["lost", "cold"].includes(s.key));
+  const progressIndex = progressStages.findIndex(s => s.key === deal.stage);
 
   return (
     <div className="max-w-3xl space-y-5 animate-fade-in">
@@ -40,23 +43,32 @@ export default function DealDetail() {
       </div>
 
       {/* Stage progress */}
-      <Card className="p-4">
-        <h2 className="font-display text-sm font-semibold mb-3">Pipeline Stage</h2>
-        <div className="flex items-center gap-1">
-          {DEAL_STAGES.filter(s => s.key !== "closed_lost").map((s, i) => {
-            const isActive = s.key === deal.stage;
-            const isPast = i <= stageIndex;
-            return (
-              <div key={s.key} className="flex-1">
-                <div className={`h-2 rounded-full transition-colors ${isPast ? "bg-primary" : "bg-muted"}`} />
-                <p className={`mt-1.5 text-[10px] text-center ${isActive ? "font-semibold text-primary" : "text-muted-foreground"}`}>
-                  {s.label}
-                </p>
-              </div>
-            );
-          })}
-        </div>
-      </Card>
+      {!["lost", "cold"].includes(deal.stage) && (
+        <Card className="p-4">
+          <h2 className="font-display text-sm font-semibold mb-3">Pipeline Stage</h2>
+          <div className="flex items-center gap-1">
+            {progressStages.map((s, i) => {
+              const isActive = s.key === deal.stage;
+              const isPastStage = i <= progressIndex;
+              return (
+                <div key={s.key} className="flex-1">
+                  <div className={`h-2 rounded-full transition-colors ${isPastStage ? "bg-primary" : "bg-muted"}`} />
+                  <p className={`mt-1.5 text-[10px] text-center ${isActive ? "font-semibold text-primary" : "text-muted-foreground"}`}>
+                    {s.label}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </Card>
+      )}
+
+      {["lost", "cold"].includes(deal.stage) && (
+        <Card className={`p-4 ${deal.stage === "lost" ? "border-destructive/30" : "border-[hsl(var(--cold))]/30"}`}>
+          <Badge variant={deal.stage === "lost" ? "destructive" : "secondary"}>{stageLabel}</Badge>
+          {deal.last_message && <p className="mt-2 text-sm text-muted-foreground">"{deal.last_message}"</p>}
+        </Card>
+      )}
 
       <div className="grid md:grid-cols-2 gap-4">
         {/* Deal info */}
