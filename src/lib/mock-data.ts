@@ -65,6 +65,25 @@ export interface LeadSummary {
   generated_at: string;
 }
 
+export interface MergeRequest {
+  id: string;
+  source_contact: { id: string; name: string; email: string; company?: string };
+  target_contact: { id: string; name: string; email: string; company?: string };
+  confidence: number;
+  reason: string;
+  status: "pending" | "approved" | "rejected";
+  created_at: string;
+}
+
+export interface Integration {
+  id: string;
+  name: string;
+  type: Channel;
+  status: "connected" | "disconnected" | "error";
+  last_sync?: string;
+  account?: string;
+}
+
 const now = new Date();
 
 export const mockContacts: Contact[] = [
@@ -112,6 +131,42 @@ export const mockReminders: Reminder[] = [
 export const mockLeadSummaries: LeadSummary[] = [
   { id: "ls1", contact_id: "1", contact_name: "Priya Sharma", summary: "Hot lead. Actively negotiating annual license. Interested in premium support. Decision expected this week.", generated_at: subHours(now, 1).toISOString() },
   { id: "ls2", contact_id: "3", contact_name: "Sarah Miller", summary: "Enterprise deal with high ACV. Proposal sent, awaiting review. Champion identified internally.", generated_at: subDays(now, 1).toISOString() },
+];
+
+export const mockMergeRequests: MergeRequest[] = [
+  {
+    id: "mr1",
+    source_contact: { id: "temp1", name: "P. Sharma", email: "priya.s@acmecorp.com", company: "Acme Corp" },
+    target_contact: { id: "1", name: "Priya Sharma", email: "priya@acmecorp.com", company: "Acme Corp" },
+    confidence: 92,
+    reason: "Same company, similar name pattern, overlapping email domain",
+    status: "pending",
+    created_at: subDays(now, 1).toISOString(),
+  },
+  {
+    id: "mr2",
+    source_contact: { id: "temp2", name: "James C.", email: "j.chen@startupxyz.io" },
+    target_contact: { id: "2", name: "James Chen", email: "james@startupxyz.io", company: "StartupXYZ" },
+    confidence: 87,
+    reason: "Same email domain, matching first name, conversation overlap",
+    status: "pending",
+    created_at: subDays(now, 2).toISOString(),
+  },
+  {
+    id: "mr3",
+    source_contact: { id: "temp3", name: "E. Wilson", email: "emma.w@designlab.co", company: "DesignLab" },
+    target_contact: { id: "5", name: "Emma Wilson", email: "emma@designlab.co", company: "DesignLab" },
+    confidence: 95,
+    reason: "Same company, name match, WhatsApp number linked to same contact",
+    status: "approved",
+    created_at: subDays(now, 5).toISOString(),
+  },
+];
+
+export const mockIntegrations: Integration[] = [
+  { id: "int1", name: "Gmail", type: "gmail", status: "connected", last_sync: subHours(now, 0.5).toISOString(), account: "founder@nosheeet.com" },
+  { id: "int2", name: "WhatsApp Business", type: "whatsapp", status: "connected", last_sync: subHours(now, 1).toISOString(), account: "+1 555 0199" },
+  { id: "int3", name: "Google Calendar", type: "calendar", status: "disconnected" },
 ];
 
 export const DEAL_STAGES: { key: DealStage; label: string }[] = [

@@ -35,7 +35,7 @@ export default function Deals() {
               </div>
               <div className="space-y-2">
                 {deals.map(d => (
-                  <Link key={d.id} to={`/contacts/${d.contact_id}`}>
+                  <Link key={d.id} to={`/deals/${d.id}`}>
                     <Card className="p-3 transition-colors hover:border-primary/30 cursor-pointer">
                       <p className="text-sm font-medium">{d.title}</p>
                       <p className="text-xs text-muted-foreground">{d.contact_name}</p>
