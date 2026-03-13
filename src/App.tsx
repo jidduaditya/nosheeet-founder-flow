@@ -4,7 +4,17 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useTheme } from "@/hooks/use-theme";
+import { RequireAuth, RedirectIfAuth, RequireAuthOnly } from "@/components/AuthGuard";
 import AppLayout from "@/components/AppLayout";
+
+// Onboarding
+import Login from "@/pages/Login";
+import ProfileSetup from "@/pages/ProfileSetup";
+import PermissionsPage from "@/pages/PermissionsPage";
+import ConnectChannels from "@/pages/ConnectChannels";
+import AiScanning from "@/pages/AiScanning";
+
+// App
 import Dashboard from "@/pages/Dashboard";
 import Contacts from "@/pages/Contacts";
 import ContactDetail from "@/pages/ContactDetail";
@@ -26,20 +36,32 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <AppLayout>
-            <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/contacts" element={<Contacts />} />
-              <Route path="/contacts/:id" element={<ContactDetail />} />
-              <Route path="/deals" element={<Deals />} />
-              <Route path="/deals/:id" element={<DealDetail />} />
-              <Route path="/reminders" element={<Reminders />} />
-              <Route path="/merge-requests" element={<MergeRequests />} />
-              <Route path="/integrations" element={<Integrations />} />
-              <Route path="/settings" element={<SettingsPage />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </AppLayout>
+          <Routes>
+            {/* Public / Onboarding */}
+            <Route path="/login" element={<RedirectIfAuth><Login /></RedirectIfAuth>} />
+            <Route path="/profile-setup" element={<RequireAuthOnly><ProfileSetup /></RequireAuthOnly>} />
+            <Route path="/permissions" element={<RequireAuthOnly><PermissionsPage /></RequireAuthOnly>} />
+            <Route path="/connect-channels" element={<RequireAuthOnly><ConnectChannels /></RequireAuthOnly>} />
+            <Route path="/ai-scanning" element={<RequireAuthOnly><AiScanning /></RequireAuthOnly>} />
+
+            {/* Protected App */}
+            <Route element={<RequireAuth><AppLayout><Routes><Route path="*" element={null} /></Routes></AppLayout></RequireAuth>}>
+              {/* Nested won't work this way, use wrapper */}
+            </Route>
+
+            {/* Protected routes with layout */}
+            <Route path="/" element={<RequireAuth><AppLayout><Dashboard /></AppLayout></RequireAuth>} />
+            <Route path="/dashboard" element={<RequireAuth><AppLayout><Dashboard /></AppLayout></RequireAuth>} />
+            <Route path="/contacts" element={<RequireAuth><AppLayout><Contacts /></AppLayout></RequireAuth>} />
+            <Route path="/contacts/:id" element={<RequireAuth><AppLayout><ContactDetail /></AppLayout></RequireAuth>} />
+            <Route path="/deals" element={<RequireAuth><AppLayout><Deals /></AppLayout></RequireAuth>} />
+            <Route path="/deals/:id" element={<RequireAuth><AppLayout><DealDetail /></AppLayout></RequireAuth>} />
+            <Route path="/reminders" element={<RequireAuth><AppLayout><Reminders /></AppLayout></RequireAuth>} />
+            <Route path="/merge-requests" element={<RequireAuth><AppLayout><MergeRequests /></AppLayout></RequireAuth>} />
+            <Route path="/integrations" element={<RequireAuth><AppLayout><Integrations /></AppLayout></RequireAuth>} />
+            <Route path="/settings" element={<RequireAuth><AppLayout><SettingsPage /></AppLayout></RequireAuth>} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
