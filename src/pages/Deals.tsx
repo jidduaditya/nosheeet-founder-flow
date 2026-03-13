@@ -1,37 +1,49 @@
 import { mockDeals, DEAL_STAGES, DealStage } from "@/lib/mock-data";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
+import { formatDistanceToNow } from "date-fns";
+import { Trophy, XCircle, Snowflake } from "lucide-react";
 
 const stageColors: Record<DealStage, string> = {
-  lead: "bg-muted",
-  qualified: "bg-primary/10",
+  discovery: "bg-muted",
+  demo: "bg-primary/10",
   proposal: "bg-primary/20",
-  negotiation: "bg-primary/30",
-  closed_won: "bg-success/15",
-  closed_lost: "bg-destructive/15",
+  won: "bg-success/10",
+  lost: "bg-destructive/10",
+  cold: "bg-[hsl(var(--cold))]/10",
+};
+
+const stageIcons: Partial<Record<DealStage, React.ReactNode>> = {
+  won: <Trophy className="h-3.5 w-3.5 text-success" />,
+  lost: <XCircle className="h-3.5 w-3.5 text-destructive" />,
+  cold: <Snowflake className="h-3.5 w-3.5 text-[hsl(var(--cold))]" />,
 };
 
 export default function Deals() {
-  const activeStages = DEAL_STAGES.filter(s => s.key !== "closed_lost");
-
   return (
     <div className="space-y-4 animate-fade-in">
       <div>
         <h1 className="font-display text-2xl font-bold tracking-tight">Deals Pipeline</h1>
         <p className="text-sm text-muted-foreground">
-          ${mockDeals.filter(d => !["closed_won", "closed_lost"].includes(d.stage)).reduce((s, d) => s + d.value, 0).toLocaleString()} in pipeline
+          ${mockDeals.filter(d => !["won", "lost", "cold"].includes(d.stage)).reduce((s, d) => s + d.value, 0).toLocaleString()} in active pipeline
         </p>
       </div>
 
       <div className="flex gap-3 overflow-x-auto pb-4">
-        {activeStages.map(stage => {
+        {DEAL_STAGES.map(stage => {
           const deals = mockDeals.filter(d => d.stage === stage.key);
           const total = deals.reduce((s, d) => s + d.value, 0);
           return (
-            <div key={stage.key} className="min-w-[240px] flex-1">
+            <div key={stage.key} className="min-w-[220px] flex-1">
               <div className={`mb-2 flex items-center justify-between rounded-lg px-3 py-2 ${stageColors[stage.key]}`}>
-                <span className="text-xs font-semibold">{stage.label}</span>
-                <span className="text-xs text-muted-foreground">${(total / 1000).toFixed(0)}k</span>
+                <span className="flex items-center gap-1.5 text-xs font-semibold">
+                  {stageIcons[stage.key]}
+                  {stage.label}
+                  <span className="ml-1 rounded-full bg-background px-1.5 py-0.5 text-[10px] font-normal text-muted-foreground">
+                    {deals.length}
+                  </span>
+                </span>
+                {total > 0 && <span className="text-[10px] text-muted-foreground">${(total / 1000).toFixed(0)}k</span>}
               </div>
               <div className="space-y-2">
                 {deals.map(d => (
@@ -39,7 +51,17 @@ export default function Deals() {
                     <Card className="p-3 transition-colors hover:border-primary/30 cursor-pointer">
                       <p className="text-sm font-medium">{d.title}</p>
                       <p className="text-xs text-muted-foreground">{d.contact_name}</p>
-                      <p className="mt-1 font-display text-lg font-bold">${d.value.toLocaleString()}</p>
+                      {d.last_message && (
+                        <p className="mt-1 text-xs text-muted-foreground truncate">"{d.last_message}"</p>
+                      )}
+                      <div className="mt-1.5 flex items-center justify-between">
+                        <span className="font-display text-base font-bold">${d.value.toLocaleString()}</span>
+                        {d.last_activity && (
+                          <span className="text-[10px] text-muted-foreground">
+                            {formatDistanceToNow(new Date(d.last_activity), { addSuffix: true })}
+                          </span>
+                        )}
+                      </div>
                     </Card>
                   </Link>
                 ))}

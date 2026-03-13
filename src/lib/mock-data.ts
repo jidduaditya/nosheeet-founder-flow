@@ -1,8 +1,8 @@
 // Mock data for the CRM - will be replaced with API calls
-import { format, subDays, subHours, addDays } from "date-fns";
+import { subDays, subHours, addDays } from "date-fns";
 
 export type Channel = "gmail" | "whatsapp" | "calendar";
-export type DealStage = "lead" | "qualified" | "proposal" | "negotiation" | "closed_won" | "closed_lost";
+export type DealStage = "discovery" | "demo" | "proposal" | "won" | "lost" | "cold";
 
 export interface Contact {
   id: string;
@@ -25,6 +25,8 @@ export interface Deal {
   stage: DealStage;
   created_at: string;
   updated_at: string;
+  last_message?: string;
+  last_activity?: string;
 }
 
 export interface Message {
@@ -93,15 +95,20 @@ export const mockContacts: Contact[] = [
   { id: "4", name: "Raj Patel", email: "raj@techfirm.in", company: "TechFirm", last_contacted: subDays(now, 2).toISOString(), channel: "whatsapp", lead_score: 64 },
   { id: "5", name: "Emma Wilson", email: "emma@designlab.co", phone: "+44 7700 900000", company: "DesignLab", last_contacted: subDays(now, 3).toISOString(), channel: "gmail", lead_score: 78 },
   { id: "6", name: "Carlos Rodriguez", email: "carlos@latamvc.com", company: "LatAm VC", last_contacted: subDays(now, 5).toISOString(), channel: "gmail", lead_score: 55 },
+  { id: "7", name: "Anika Gupta", email: "anika@novafin.io", company: "NovaFin", last_contacted: subDays(now, 12).toISOString(), channel: "gmail", lead_score: 40 },
+  { id: "8", name: "Tom Bradley", email: "tom@cloudstack.dev", company: "CloudStack", last_contacted: subDays(now, 9).toISOString(), channel: "whatsapp", lead_score: 33 },
 ];
 
 export const mockDeals: Deal[] = [
-  { id: "d1", title: "Acme Annual License", contact_id: "1", contact_name: "Priya Sharma", value: 24000, stage: "negotiation", created_at: subDays(now, 14).toISOString(), updated_at: subHours(now, 3).toISOString() },
-  { id: "d2", title: "StartupXYZ Pilot", contact_id: "2", contact_name: "James Chen", value: 5000, stage: "proposal", created_at: subDays(now, 7).toISOString(), updated_at: subDays(now, 1).toISOString() },
-  { id: "d3", title: "BigCo Enterprise", contact_id: "3", contact_name: "Sarah Miller", value: 120000, stage: "qualified", created_at: subDays(now, 3).toISOString(), updated_at: subDays(now, 1).toISOString() },
-  { id: "d4", title: "TechFirm Integration", contact_id: "4", contact_name: "Raj Patel", value: 8500, stage: "lead", created_at: subDays(now, 10).toISOString(), updated_at: subDays(now, 2).toISOString() },
-  { id: "d5", title: "DesignLab Retainer", contact_id: "5", contact_name: "Emma Wilson", value: 36000, stage: "closed_won", created_at: subDays(now, 30).toISOString(), updated_at: subDays(now, 5).toISOString() },
-  { id: "d6", title: "LatAm Fund Tools", contact_id: "6", contact_name: "Carlos Rodriguez", value: 15000, stage: "lead", created_at: subDays(now, 2).toISOString(), updated_at: subDays(now, 1).toISOString() },
+  { id: "d1", title: "Acme Annual License", contact_id: "1", contact_name: "Priya Sharma", value: 24000, stage: "proposal", created_at: subDays(now, 14).toISOString(), updated_at: subHours(now, 3).toISOString(), last_message: "Pricing looks good, need to discuss SLA", last_activity: subHours(now, 2).toISOString() },
+  { id: "d2", title: "StartupXYZ Pilot", contact_id: "2", contact_name: "James Chen", value: 5000, stage: "demo", created_at: subDays(now, 7).toISOString(), updated_at: subDays(now, 1).toISOString(), last_message: "Team loved the demo, send pilot agreement", last_activity: subHours(now, 6).toISOString() },
+  { id: "d3", title: "BigCo Enterprise", contact_id: "3", contact_name: "Sarah Miller", value: 120000, stage: "discovery", created_at: subDays(now, 3).toISOString(), updated_at: subDays(now, 1).toISOString(), last_message: "Enterprise proposal attached, awaiting feedback", last_activity: subDays(now, 1).toISOString() },
+  { id: "d4", title: "TechFirm Integration", contact_id: "4", contact_name: "Raj Patel", value: 8500, stage: "discovery", created_at: subDays(now, 10).toISOString(), updated_at: subDays(now, 2).toISOString(), last_message: "Can we reschedule Thursday's call?", last_activity: subDays(now, 2).toISOString() },
+  { id: "d5", title: "DesignLab Retainer", contact_id: "5", contact_name: "Emma Wilson", value: 36000, stage: "won", created_at: subDays(now, 30).toISOString(), updated_at: subDays(now, 5).toISOString(), last_message: "Contract signed! When can we kick off?", last_activity: subDays(now, 3).toISOString() },
+  { id: "d6", title: "LatAm Fund Tools", contact_id: "6", contact_name: "Carlos Rodriguez", value: 15000, stage: "discovery", created_at: subDays(now, 2).toISOString(), updated_at: subDays(now, 1).toISOString(), last_message: "Interested in learning more about your platform", last_activity: subDays(now, 5).toISOString() },
+  { id: "d7", title: "NovaFin Analytics", contact_id: "7", contact_name: "Anika Gupta", value: 18000, stage: "cold", created_at: subDays(now, 25).toISOString(), updated_at: subDays(now, 12).toISOString(), last_message: "Will circle back next quarter", last_activity: subDays(now, 12).toISOString() },
+  { id: "d8", title: "CloudStack DevTools", contact_id: "8", contact_name: "Tom Bradley", value: 9500, stage: "cold", created_at: subDays(now, 20).toISOString(), updated_at: subDays(now, 9).toISOString(), last_message: "Budget review in progress, will update", last_activity: subDays(now, 9).toISOString() },
+  { id: "d9", title: "MegaTech Platform", contact_id: "3", contact_name: "Sarah Miller", value: 45000, stage: "lost", created_at: subDays(now, 40).toISOString(), updated_at: subDays(now, 15).toISOString(), last_message: "Going with a different vendor this time", last_activity: subDays(now, 15).toISOString() },
 ];
 
 export const mockMessages: Message[] = [
@@ -126,6 +133,8 @@ export const mockReminders: Reminder[] = [
   { id: "r3", contact_id: "3", contact_name: "Sarah Miller", text: "Check if Sarah reviewed the enterprise proposal", due_at: addDays(now, 3).toISOString(), is_done: false, auto_generated: true },
   { id: "r4", contact_id: "5", contact_name: "Emma Wilson", text: "Schedule kickoff meeting with DesignLab", due_at: subDays(now, 1).toISOString(), is_done: false, auto_generated: false },
   { id: "r5", contact_id: "6", contact_name: "Carlos Rodriguez", text: "Prepare pricing deck for LatAm VC", due_at: addDays(now, 2).toISOString(), is_done: false, auto_generated: true },
+  { id: "r6", contact_id: "7", contact_name: "Anika Gupta", text: "Re-engage — no reply in 12 days", due_at: subDays(now, 2).toISOString(), is_done: false, auto_generated: true },
+  { id: "r7", contact_id: "8", contact_name: "Tom Bradley", text: "Check on budget review status", due_at: subDays(now, 3).toISOString(), is_done: false, auto_generated: true },
 ];
 
 export const mockLeadSummaries: LeadSummary[] = [
@@ -170,10 +179,10 @@ export const mockIntegrations: Integration[] = [
 ];
 
 export const DEAL_STAGES: { key: DealStage; label: string }[] = [
-  { key: "lead", label: "Lead" },
-  { key: "qualified", label: "Qualified" },
+  { key: "discovery", label: "Discovery" },
+  { key: "demo", label: "Demo" },
   { key: "proposal", label: "Proposal" },
-  { key: "negotiation", label: "Negotiation" },
-  { key: "closed_won", label: "Won" },
-  { key: "closed_lost", label: "Lost" },
+  { key: "won", label: "Won" },
+  { key: "lost", label: "Lost" },
+  { key: "cold", label: "Cold" },
 ];
