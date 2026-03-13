@@ -69,10 +69,20 @@ export interface LeadSummary {
   generated_at: string;
 }
 
+export interface MergeContactInfo {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  company?: string;
+  channel?: Channel;
+  last_message?: string;
+}
+
 export interface MergeRequest {
   id: string;
-  source_contact: { id: string; name: string; email: string; company?: string };
-  target_contact: { id: string; name: string; email: string; company?: string };
+  source_contact: MergeContactInfo;
+  target_contact: MergeContactInfo;
   confidence: number;
   reason: string;
   status: "pending" | "approved" | "rejected";
@@ -150,8 +160,8 @@ export const mockLeadSummaries: LeadSummary[] = [
 export const mockMergeRequests: MergeRequest[] = [
   {
     id: "mr1",
-    source_contact: { id: "temp1", name: "P. Sharma", email: "priya.s@acmecorp.com", company: "Acme Corp" },
-    target_contact: { id: "1", name: "Priya Sharma", email: "priya@acmecorp.com", company: "Acme Corp" },
+    source_contact: { id: "temp1", name: "P. Sharma", email: "priya.s@acmecorp.com", phone: "+91 98765 43211", company: "Acme Corp", channel: "gmail", last_message: "Hi, following up on the SLA discussion from last week." },
+    target_contact: { id: "1", name: "Priya Sharma", email: "priya@acmecorp.com", phone: "+91 98765 43210", company: "Acme Corp", channel: "whatsapp", last_message: "Pricing looks good, need to discuss SLA" },
     confidence: 92,
     reason: "Same company, similar name pattern, overlapping email domain",
     status: "pending",
@@ -159,8 +169,8 @@ export const mockMergeRequests: MergeRequest[] = [
   },
   {
     id: "mr2",
-    source_contact: { id: "temp2", name: "James C.", email: "j.chen@startupxyz.io" },
-    target_contact: { id: "2", name: "James Chen", email: "james@startupxyz.io", company: "StartupXYZ" },
+    source_contact: { id: "temp2", name: "James C.", email: "j.chen@startupxyz.io", channel: "gmail", last_message: "Can you resend the demo recording link?" },
+    target_contact: { id: "2", name: "James Chen", email: "james@startupxyz.io", phone: "+1 555 0142", company: "StartupXYZ", channel: "whatsapp", last_message: "Team loved the demo, send pilot agreement" },
     confidence: 87,
     reason: "Same email domain, matching first name, conversation overlap",
     status: "pending",
@@ -168,12 +178,21 @@ export const mockMergeRequests: MergeRequest[] = [
   },
   {
     id: "mr3",
-    source_contact: { id: "temp3", name: "E. Wilson", email: "emma.w@designlab.co", company: "DesignLab" },
-    target_contact: { id: "5", name: "Emma Wilson", email: "emma@designlab.co", company: "DesignLab" },
+    source_contact: { id: "temp3", name: "E. Wilson", email: "emma.w@designlab.co", company: "DesignLab", channel: "gmail", last_message: "Invoice for Q4 attached." },
+    target_contact: { id: "5", name: "Emma Wilson", email: "emma@designlab.co", phone: "+44 7700 900000", company: "DesignLab", channel: "whatsapp", last_message: "Contract signed! When can we kick off?" },
     confidence: 95,
     reason: "Same company, name match, WhatsApp number linked to same contact",
     status: "approved",
     created_at: subDays(now, 5).toISOString(),
+  },
+  {
+    id: "mr4",
+    source_contact: { id: "temp4", name: "C. Rodriguez", email: "c.rodriguez@latamvc.com", channel: "calendar", last_message: "Meeting scheduled: LatAm Fund intro call" },
+    target_contact: { id: "6", name: "Carlos Rodriguez", email: "carlos@latamvc.com", company: "LatAm VC", channel: "gmail", last_message: "Interested in learning more about your platform" },
+    confidence: 79,
+    reason: "Same surname, overlapping company domain, calendar invite match",
+    status: "pending",
+    created_at: subDays(now, 3).toISOString(),
   },
 ];
 
