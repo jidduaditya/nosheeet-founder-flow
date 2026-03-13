@@ -1,6 +1,6 @@
 // API client — configure base URL here
 // In development, uses mock data fallback. In production, point to your backend.
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://nosheeet-backend-production.up.railway.app";
 
 class ApiError extends Error {
   status: number;
