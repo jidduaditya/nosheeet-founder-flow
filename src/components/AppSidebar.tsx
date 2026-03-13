@@ -1,36 +1,44 @@
 import {
   LayoutDashboard,
   Users,
-  Handshake,
   Bell,
+  GitMerge,
+  Plug,
+  Settings,
   Sun,
   Moon,
+  Handshake,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
-import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
 
-const items = [
+const mainItems = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
   { title: "Contacts", url: "/contacts", icon: Users },
   { title: "Deals", url: "/deals", icon: Handshake },
   { title: "Reminders", url: "/reminders", icon: Bell },
+  { title: "Merge Requests", url: "/merge-requests", icon: GitMerge },
+];
+
+const settingsItems = [
+  { title: "Integrations", url: "/integrations", icon: Plug },
+  { title: "Settings", url: "/settings", icon: Settings },
 ];
 
 export function AppSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
-  const location = useLocation();
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
@@ -57,10 +65,11 @@ export function AppSidebar() {
               </span>
             )}
           </div>
+
           <SidebarGroup>
             <SidebarGroupContent>
               <SidebarMenu>
-                {items.map((item) => (
+                {mainItems.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
                       <NavLink
@@ -78,7 +87,30 @@ export function AppSidebar() {
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
+
+          <SidebarGroup>
+            {!collapsed && <SidebarGroupLabel className="text-xs text-muted-foreground">Configuration</SidebarGroupLabel>}
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {settingsItems.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild>
+                      <NavLink
+                        to={item.url}
+                        className="hover:bg-muted/50"
+                        activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                      >
+                        <item.icon className="mr-2 h-4 w-4" />
+                        {!collapsed && <span>{item.title}</span>}
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
         </div>
+
         <div className="p-3">
           <button
             onClick={toggleTheme}
