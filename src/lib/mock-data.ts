@@ -69,10 +69,20 @@ export interface LeadSummary {
   generated_at: string;
 }
 
+export interface MergeContactInfo {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  company?: string;
+  channel?: Channel;
+  last_message?: string;
+}
+
 export interface MergeRequest {
   id: string;
-  source_contact: { id: string; name: string; email: string; company?: string };
-  target_contact: { id: string; name: string; email: string; company?: string };
+  source_contact: MergeContactInfo;
+  target_contact: MergeContactInfo;
   confidence: number;
   reason: string;
   status: "pending" | "approved" | "rejected";
