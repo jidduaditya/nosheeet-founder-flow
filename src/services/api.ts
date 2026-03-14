@@ -14,11 +14,21 @@ class ApiError extends Error {
   }
 }
 
+function getToken(): string | null {
+  try {
+    const raw = localStorage.getItem("nosheeet-auth");
+    if (raw) return JSON.parse(raw).state?.sessionToken ?? null;
+  } catch {}
+  return null;
+}
+
 async function request<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const url = `${API}${endpoint}`;
+  const token = getToken();
   const res = await fetch(url, {
     headers: {
       "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...options?.headers,
     },
     ...options,
