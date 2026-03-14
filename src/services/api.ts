@@ -25,13 +25,14 @@ function getToken(): string | null {
 async function request<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const url = `${API}${endpoint}`;
   const token = getToken();
+  const { headers: extraHeaders, ...restOptions } = options ?? {};
   const res = await fetch(url, {
+    ...restOptions,
     headers: {
       "Content-Type": "application/json",
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...options?.headers,
+      ...(extraHeaders as Record<string, string>),
     },
-    ...options,
   });
 
   if (!res.ok) {
