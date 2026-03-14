@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://nosheeet-backend-production.up.railway.app";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "https://https-github-com-your-org-nosheeet-production.up.railway.app";
 
 async function post<T>(endpoint: string, body?: unknown): Promise<T> {
   const token = localStorage.getItem("nosheeet-auth")
