@@ -17,8 +17,16 @@ class ApiError extends Error {
 function getToken(): string | null {
   try {
     const raw = localStorage.getItem("nosheeet-auth");
-    if (raw) return JSON.parse(raw).state?.sessionToken ?? null;
-  } catch {}
+    if (!raw) return null;
+
+    const token = JSON.parse(raw)?.state?.sessionToken;
+    if (typeof token === "string" && token.trim() && !token.startsWith("mock-")) {
+      return token;
+    }
+  } catch {
+    // ignore malformed storage
+  }
+
   return null;
 }
 
@@ -36,6 +44,12 @@ async function request<T>(endpoint: string, options?: RequestInit): Promise<T> {
   });
 
   if (!res.ok) {
+    if (res.status === 401) {
+      localStorage.removeItem("nosheeet-auth");
+      if (typeof window !== "undefined" && window.location.pathname !== "/login") {
+        window.location.replace("/login");
+      }
+    }
     throw new ApiError(`API Error: ${res.status} ${res.statusText}`, res.status);
   }
 

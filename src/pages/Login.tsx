@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/auth-store";
-import { mockAuthApi } from "@/lib/mock-auth-api";
+import { authApi } from "@/lib/auth-api";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -30,9 +30,11 @@ export default function Login() {
     setLoading(true);
     setError("");
     try {
-      await mockAuthApi.sendOtp(phone);
+      await authApi.sendOtp(phone);
       setOtpSent(true);
-    } catch { setError("Failed to send OTP"); }
+    } catch {
+      setError("Failed to send OTP");
+    }
     setLoading(false);
   };
 
@@ -41,11 +43,13 @@ export default function Login() {
     setLoading(true);
     setError("");
     try {
-      const res = await mockAuthApi.verifyOtp(phone, otp);
+      const res = await authApi.verifyOtp(phone, otp);
       setSessionToken(res.token);
       setUser({ id: res.user.id, phone: res.user.phone });
       navigate(onboardingComplete ? "/dashboard" : "/profile-setup");
-    } catch { setError("Invalid OTP"); }
+    } catch {
+      setError("Invalid OTP");
+    }
     setLoading(false);
   };
 
@@ -54,22 +58,17 @@ export default function Login() {
     setLoading(true);
     setError("");
     try {
-      await mockAuthApi.magicLink(email);
+      await authApi.magicLink(email);
       setMagicLinkSent(true);
-    } catch { setError("Failed to send magic link"); }
+    } catch {
+      setError("Failed to send magic link");
+    }
     setLoading(false);
   };
 
-  // For demo: simulate magic link verification
+  // Keep UI but avoid writing fake tokens that break authenticated APIs
   const handleSimulateMagicLink = async () => {
-    setLoading(true);
-    try {
-      const session = await mockAuthApi.getSession();
-      setSessionToken("mock-magic-token-" + Date.now());
-      setUser({ id: session.user.id, email, name: session.user.name });
-      navigate(onboardingComplete ? "/dashboard" : "/profile-setup");
-    } catch { setError("Verification failed"); }
-    setLoading(false);
+    setError("Use the email link to complete sign-in.");
   };
 
   return (
